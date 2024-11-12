@@ -6,21 +6,19 @@ import starlight from '@astrojs/starlight';
 export default defineConfig({
 	integrations: [
 		starlight({
-			title: 'My Docs',
+			title: 'Rosktop',
 			social: {
-				github: 'https://github.com/withastro/starlight',
+				github: 'https://github.com/rohankid1/cachy-dotfiles',
+				discord: 'https://discord.gg/WxHgdFD',
 			},
 			sidebar: [
 				{
-					label: 'Guides',
-					items: [
-						// Each item here is one entry in the navigation menu.
-						{ label: 'Example Guide', slug: 'guides/example' },
-					],
+					label: 'Getting Started',
+					autogenerate: { directory: 'getting-started' },
 				},
 				{
-					label: 'Reference',
-					autogenerate: { directory: 'reference' },
+					label: 'Configuration',
+					autogenerate: { directory: 'configuration' },
 				},
 			],
 		}),

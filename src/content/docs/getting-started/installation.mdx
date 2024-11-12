@@ -1,0 +1,64 @@
+---
+title: Installation
+description: Instructions on installating Rosktop
+---
+
+import { Aside, Tabs, TabItem, Steps } from "@astrojs/starlight/components";
+
+<Steps>
+1. **Install dependencies**
+
+    For a full setup / same setup as mine, you will need to install several dependencies.
+    I use CachyOS which is an Arch-based distro, so I use pacman/paru to install from the Arch repositories/AUR.
+    Most software here should be in your distro's repositories. If not, check the
+    website of the dependency. Otherwise, you can cherry-pick which stuff you want to
+    include in your setup.
+
+    ```sh
+    sudo pacman -S git stow libnotify python-pywal starship kitty hyprland fuzzel fish hyprlock hypridle otf-hermit-nerd ttf-ubuntu-font-family
+    ```
+
+    <Aside title="Important">
+        Some packages are not available in the official Arch repos, but they are in the AUR. Use an AUR helper such as yay or paru:
+
+        <Tabs>
+        <TabItem label="Paru">
+            ```sh
+            paru -S pyprland hyprpolkitagent-git grimshot-bin-sway aylurs-gtk-shell
+            ```
+        </TabItem>
+        <TabItem label="Yay">
+            ```sh
+            yay -S pyprland hyprpolkitagent-git grimshot-bin-sway aylurs-gtk-shell
+            ```
+        </TabItem>
+        </Tabs>
+    </Aside>
+
+2. **Clone the repository**
+
+    First, git clone the repository by running the following command:
+    ```sh
+    git clone https://github.com/rohankid1/cachy-dotfiles/ 
+    ```
+
+3. **Rename and move the directory**
+
+    ```sh
+    mv ~/path/to/cachy-dotfiles $HOME/.dotfiles
+    ```
+
+4. **Cd into the directory and stow it**
+
+    <Aside type="caution">
+        `stow *` will "stow" everything in it.
+        To "stow" a specific one, do `stow <DIR>` instead.
+        For example, `stow hypr`
+    </Aside>
+
+    ```sh
+    cd ~/.dotfiles && stow *
+    ```
+</Steps>
+
+After you complete these steps, you can log into Hyprland!
