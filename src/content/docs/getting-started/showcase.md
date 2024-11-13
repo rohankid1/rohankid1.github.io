@@ -3,5 +3,5 @@ title: Showcase
 description: Demonstration of the desktop
 ---
 
-![image](/public/showcase.png)
-![image](/public/showcase2.png)
+![image](/src/assets/showcase.png)
+![image](/src/assets/showcase2.png)
