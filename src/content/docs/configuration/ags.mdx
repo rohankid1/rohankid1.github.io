@@ -1,0 +1,288 @@
+---
+title: AGS
+description: Configuration for my AGS setup
+---
+
+import { Aside, Tabs, TabItem } from "@astrojs/starlight/components";
+
+## Wat?
+Aylur's Gtk Shell, also known as AGS, is library for creating desktop widgets
+for Wayland. It is based on GTK3. Other people using AGS have made god tier
+setups with it like [end-4](https://end-4.github.io/dots-hyprland-wiki/en/), it's actually beyond me!
+Thanks to these dotfiles, I have made my own setup using AGS. Nothing amazing in comparison to those,
+but at least I can use it. Though I have some stuff to fix, such as the notifications not showing,
+fix the memory leaks that occur in wallpaper changer.
+
+## Where?
+Assuming you have already stowed AGS, to configure it, you can head into  `~/.config/ags/`.
+Once in there, you should see a directory called `options`. You will mostly work in here.
+
+<Aside type="note">
+You can also go into `~/.dotfiles/ags/.config/ags`, since `~/.config/ags` is just a symbolic link
+pointing back to `~/.dotfiles/ags/.config/ags`.
+</Aside>
+
+## Configuration
+This section lists the available properties available for you to modify.
+
+### Workspaces
+{/* * **labelled**: Whether workspaces should be labelled ("1", "2", "3", "4", etc) */}
+```ts
+type WorkspaceOptions = {
+    labelled: boolean // Whether workspaces should be labelled ("1", "2", "3", etc)
+};
+```
+
+### Panels
+```ts
+type LeftPanelOptions = {
+    profile: string, // Path to an image that will be used as the picture
+    close_on_module_open: boolean // Whether the panel should close after clicking on an application/module
+};
+
+// Right Panel currently does not have any configuration.
+type RightPanelOptions = {};
+```
+
+#### Example (left panel)
+![image](/public/left_panel.png)
+
+### Notifications
+```ts
+type NotificationOptions = {
+    // Where to anchor/position the notification popups.
+    // For example, bottom left: `["bottom", "left"]`
+    position: Array<"top" | "right" | "bottom" | "left">,
+};
+```
+
+### Icons
+<Tabs>
+    <TabItem label="types.ts">
+    ```ts
+    type IconOption = {
+     // The name to represent the icon
+     name: string,
+     // Symbol/icon, can be icons from nerd fonts
+     font: string,
+     // Gtk icon name, check gtk3-icon-browser from
+     // the `gtk3-demos` package
+     symbolic: string,
+    };
+    ```
+    </TabItem>
+    <TabItem label="options/icons.ts">
+    ```ts
+    function i(name: string, font: string, symbolic: string): IconOption {
+      return {
+         name,
+         font,
+         symbolic
+      }
+    }
+
+    // You can call these workspaces anything you want
+    // This is a type string[]
+    const workspace_icons = ["1", "2", "3", "4", "5", "6", "7", "8", "9", "10"];
+
+    // Add icons here.
+    // For function help, refer to types.ts
+    const icons = [
+     i("home", "", "user-home-symbolic"),
+     i("close", "", "window-close"),
+     i("start", "", "media-playback-start-symbolic"),
+     i("pause", "", "media-playback-pause-symbolic"),
+     i("plus", "", "list-add-symbolic"),
+     i("skip", "󰒭", "media-skip-forward"),
+     i("previous", "󰒮", "media-skip-backward"),
+     i("notification_bell", "", ""),
+     i("clear_all", "󰎟", "edit-clear-all-symbolic")
+    ] as IconOption[];
+    ```
+    </TabItem>
+</Tabs>
+
+### Desktop
+<Tabs>
+    <TabItem label="types.ts">
+    ```ts
+    type DesktopItems = {
+        shortcuts: DesktopShortcutMenus[]
+    };
+
+    type DesktopShortcutMenus = {
+      // The label that will appear in the context menu
+      name: string,
+      // Script that will be executed when clicked
+      script: string,
+      // Whether it should be a separator instead.
+      // If true, it ignores all other properties
+      separator: boolean,
+    };
+    ```
+    </TabItem>
+    <TabItem label="options/desktop.ts">
+    ```ts
+    function app(name: string, script: string): DesktopShortcutMenus {
+        return {
+          name,
+          script,
+          separator: false,
+        };
+    }
+
+    const separator: DesktopShortcutMenus = {
+        name: "",
+        script: "",
+        separator: true,
+    };
+
+    // for function help (app(...)), refer to types.ts
+    const shortcuts: DesktopShortcutMenus[] = [
+        // add other apps you want in here
+        app("Terminal", apps.terminal.name),
+        app("Codium", "codium --ozone-platform-hint=auto --ozone-platform=wayland"),
+        // use separator as much as you want to
+        separator,
+        app("Colour Picker", "hyprpicker -a"),
+    ];
+    ```
+    </TabItem>
+</Tabs>
+
+### Apps
+<Tabs>
+    <TabItem label="types.ts">
+      ```ts
+      // Used for a list of system options, shown at the bottom of the left panel
+      type SystemOption = {
+        // The name of the option, this is used as the tooltip text
+        name: string,
+        // The script to run when clicked
+        script: string,
+        // The icon to use
+        icon: string,
+      };
+
+      // Used for getting the user's preferred browser
+      type BrowserOptions = {
+        // Name of the browser (binary)
+        name: string,
+        // The icon to use to represent this browser
+        icon: string,
+      };
+
+      // Used for getting the user's preferred terminal
+      type TerminalOptions = {
+        // Name of the terminal (binary)
+        name: string,
+        // The icon to use to represent this terminal
+        icon: string,
+      };
+
+      // Used for getting the user's preferred file manager
+      type FileManagerOptions = {
+        // Name of the file manager
+        name: string,
+        // Whether to run it in a terminal.
+        // Required if your terminal isn't a GUI but a TUI (yazi, ranger, etc)
+        terminal: boolean,
+        // The icon to use to represent this file manager
+        icon: string,
+      };
+      
+      // Used for the wallpaper changer app
+      type WallpaperChangerOptions = {
+        // The directory for the wallpaper changer app to use
+        wallpaper_directory: string,
+        // Options to pass when calling swww
+        swww_options: SwwwOptions,
+      };
+
+      // Used when calling swww
+      type SwwwOptions = {
+        transition_fps: number,
+        transition_step: number,
+        transition_angle: number,
+        transition_duration: number,
+        transition_type: SwwwTransitionType
+      };
+
+      // The transition type that should be used when
+      // swww changes the wallpaper
+      type SwwwTransitionType = "none"
+        | "simple"
+        | "fade"
+        | "left"
+        | "right"
+        | "top"
+        | "bottom"
+        | "center"
+        | "outer"
+        | "any"
+        | "random"
+        | "wipe"
+        | "wave"
+        | "grow";
+      ```
+    </TabItem>
+    <TabItem label="options/apps.ts">
+    ```ts
+    function opt(name: string, script: string, icon: string): SystemOption {
+        return {
+            name,
+            script,
+            icon
+        };
+    }
+
+    // Browser preferences
+    const browser = {
+        name: "",
+        icon: ""
+    };
+
+    // Terminal preferences
+    const terminal = {
+        name: "",
+        icon: "",
+    };
+
+    // File manager preferences
+    const fm = {
+        name: "",
+        // Set to true if your terminal runs in a terminal
+        terminal: false,
+        icon: ""
+    };
+
+    const wpc = {
+        // Path to where your wallpapers are
+        wallpaper_directory: "",
+        swww_options: {
+            transition_angle: 30,
+            // You should probably change this to whatever
+            // your monitor's refresh rate is, idk
+            transition_fps: 75,
+            transition_duration: 1,
+            transition_step: 100,
+            transition_type: "grow"
+        },
+    };
+
+    const system_options = {
+        opts = [
+            // For function help (opt(...)), refer to types.ts
+            opt("Shutdown", "poweroff", "system-shutdown-symbolic"),
+            opt("Reboot", "reboot", "system-reboot-symbolic"),
+            opt("Logout", "hyprctl dispatch exit", "system-log-out"),
+            opt("Lock", "hyprlock", "system-lock-screen-symbolic"),
+            opt("Search Applications", "/usr/bin/ags -t rolauncher", "system-search-symbolic"),
+            opt("Wallpaper", "/usr/bin/ags -t WallpaperChanger", "preferences-desktop-wallpaper"),
+            opt("Colour Picker", "hyprpicker -a", "color-select-symbolic"),
+            opt("Reload", "~/.config/ags/scripts/reload-ags.sh", "view-refresh"),
+        ]
+    };
+    ```
+    </TabItem>
+</Tabs>

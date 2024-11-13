@@ -1,0 +1,13 @@
+---
+title: Pywal
+description: Configuration for Pywal
+---
+
+Before starting AGS, you first need to make sure pywal has been ran at least
+once, so it can generate a file in `ags/style/colors.scss`, which is a
+symbolic link that points to `~/.cache/wal/colors.scss`. If you don't,
+it may not load fully, or the UI may not have any styling. To do this,
+you can run:
+```sh
+wal -i /path/to/image_you_want
+```

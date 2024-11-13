@@ -21,3 +21,4 @@ thing:
 * [Fish](https://fishshell.com/) - A really cool interactive shell
 * [Fuzzel](https://codeberg.org/dnkl/fuzzel) - Application launcher that I instead use as an emoji picker (for now, probably)
 * [Starship](https://starship.rs) - An amazing shell prompt written in Rust
+* [Swww](https://github.com/LGFae/swww) - An amazing wallpaper daemon for Wayland that has beautiful transition options 
